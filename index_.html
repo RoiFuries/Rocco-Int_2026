@@ -42,25 +42,6 @@
 			transform:scale(1.02);
 			transition:transform 1.2s ease;
 		}
-		.split-side__video-wrap{
-			position:absolute;
-			inset:0;
-			overflow:hidden;
-			background:#000;
-			transform:scale(1.02);
-			transition:transform 1.2s ease;
-		}
-		.split-side__video-wrap iframe{
-			position:absolute;
-			top:50%;
-			left:50%;
-			width:250%;
-			height:200%;
-			transform:translate(-50%,-50%);
-			border:0;
-			pointer-events:none;
-		}
-		.split-side:hover .split-side__video-wrap{ transform:scale(1.08); }
 		.split-side__overlay{
 			position:absolute;
 			inset:0;
@@ -207,7 +188,7 @@
 			.split-side__content{ padding-bottom:clamp(32px,10vw,56px); }
 		}
 		@media (prefers-reduced-motion: reduce){
-			.split-side, .split-side__bg, .split-side__cta, .split-side__overlay, .split-side__video-wrap{ transition:none; }
+			.split-side, .split-side__bg, .split-side__cta, .split-side__overlay{ transition:none; }
 		}
 	</style>
 </head>
@@ -216,9 +197,7 @@
 	<div class="split-home">
 
 		<a class="split-side split-side--narrativa" href="narrative_home.html" aria-label="View narrative work: series and film">
-			<div class="split-side__video-wrap">
-				<iframe src="https://player.vimeo.com/video/1162279312?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Narrative background video" tabindex="-1"></iframe>
-			</div>
+			<img class="split-side__bg" src="assets/img/home-11/port-2.jpg" alt="">
 			<div class="split-side__overlay"></div>
 			<div class="split-side__content">
 				<span class="split-side__eyebrow">01</span>
@@ -228,9 +207,7 @@
 		</a>
 
 		<a class="split-side split-side--comerciales" href="commercial_home.html" aria-label="View commercial work: advertising and brand">
-			<div class="split-side__video-wrap">
-				<iframe src="https://player.vimeo.com/video/1158549613?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Commercials background video" tabindex="-1"></iframe>
-			</div>
+			<img class="split-side__bg" src="assets/img/home-11/port-1.jpg" alt="">
 			<div class="split-side__overlay"></div>
 			<div class="split-side__content">
 				<span class="split-side__eyebrow">02</span>
