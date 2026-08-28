@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Rocco DP</title>
+	<meta name="description" content="Rocco Rodriguez, Director of Photography based in Mexico City. Narrative and commercial work.">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<style>
+		html, body{ height:100%; margin:0; background:#121212; }
+		.split-home{
+			position:relative;
+			display:flex;
+			width:100%;
+			height:100vh;
+			min-height:560px;
+			overflow:hidden;
+		}
+		.split-side{
+			position:relative;
+			flex:1;
+			display:flex;
+			align-items:flex-end;
+			overflow:hidden;
+			color:#F5F7F5;
+			outline:none;
+			transition:flex .6s cubic-bezier(.19,1,.22,1);
+		}
+		.split-side:focus-visible{
+			outline:2px solid #EB5939;
+			outline-offset:-6px;
+		}
+		.split-side__bg{
+			position:absolute;
+			inset:0;
+			width:100%;
+			height:100%;
+			object-fit:cover;
+			object-position:center;
+			transform:scale(1.02);
+			transition:transform 1.2s ease;
+		}
+		.split-side__video-wrap{
+			position:absolute;
+			inset:0;
+			overflow:hidden;
+			background:#000;
+			transform:scale(1.02);
+			transition:transform 1.2s ease;
+		}
+		.split-side__video-wrap iframe{
+			position:absolute;
+			top:50%;
+			left:50%;
+			width:250%;
+			height:200%;
+			transform:translate(-50%,-50%);
+			border:0;
+			pointer-events:none;
+		}
+		.split-side:hover .split-side__video-wrap{ transform:scale(1.08); }
+		.split-side__overlay{
+			position:absolute;
+			inset:0;
+			background-image:linear-gradient(to top, rgba(18,18,18,.88) 0%, rgba(18,18,18,.4) 45%, rgba(18,18,18,.18) 100%);
+			background-color:rgba(0,0,0,0);
+			transition:background-color .5s ease;
+		}
+		.split-home:hover .split-side:not(:hover) .split-side__overlay{
+			background-color:rgba(0,0,0,.3);
+		}
+		.split-side__content{
+			position:relative;
+			z-index:2;
+			padding:0 clamp(24px,6vw,80px) clamp(48px,8vw,100px);
+			max-width:640px;
+		}
+		.split-side__eyebrow{
+			font-family:var(--tp-ff-syne);
+			font-size:13px;
+			font-weight:600;
+			letter-spacing:.22em;
+			color:#EB5939;
+			display:block;
+			margin-bottom:14px;
+		}
+		.split-side__title{
+			font-family:var(--tp-ff-syne);
+			font-weight:800;
+			text-transform:uppercase;
+			font-size:clamp(30px,3vw,72px);
+			line-height:.94;
+			letter-spacing:-.01em;
+			margin:0 0 12px;
+			color:#F5F7F5;
+			text-wrap:balance;
+		}
+		.split-side__sub{
+			display:block;
+			font-family:var(--tp-ff-syne);
+			font-size:14px;
+			letter-spacing:.1em;
+			text-transform:uppercase;
+			color:rgba(245,247,245,.68);
+			margin-bottom:24px;
+		}
+		.split-side__cta{
+			display:inline-flex;
+			align-items:center;
+			gap:8px;
+			font-family:var(--tp-ff-syne);
+			font-size:14px;
+			letter-spacing:.04em;
+			color:#F5F7F5;
+			border-bottom:1px solid rgba(245,247,245,.4);
+			padding-bottom:5px;
+			transition:gap .3s ease, border-color .3s ease, color .3s ease;
+		}
+		.split-home:hover .split-side:not(:hover){ flex:0.82; }
+		.split-home:hover .split-side:hover{ flex:1.18; }
+		.split-side:hover .split-side__bg{ transform:scale(1.08); }
+		.split-side:hover .split-side__cta{
+			gap:14px;
+			color:#EB5939;
+			border-color:#EB5939;
+		}
+		.split-home__divider{
+			position:absolute;
+			top:0; bottom:0; left:50%;
+			width:1px;
+			background:rgba(245,247,245,.22);
+			z-index:3;
+			pointer-events:none;
+		}
+		.split-home__center{
+			position:absolute;
+			top:clamp(24px,4vw,44px);
+			left:clamp(24px,6vw,72px);
+			z-index:4;
+			text-align:left;
+			pointer-events:none;
+			max-width:220px;
+		}
+		.split-home__brand{
+			display:flex;
+			align-items:flex-start;
+			gap:4px;
+			margin-bottom:10px;
+		}
+		.split-home__brand-name{
+			font-family:var(--tp-ff-syne);
+			font-weight:700;
+			font-size:clamp(15px,1.7vw,20px);
+			letter-spacing:-.01em;
+			color:#F5F7F5;
+			text-shadow:0 1px 8px rgba(0,0,0,.7);
+			white-space:nowrap;
+		}
+		.split-home__brand-mark{
+			font-family:var(--tp-ff-syne);
+			font-weight:600;
+			font-size:10px;
+			letter-spacing:.05em;
+			color:#F5F7F5;
+			opacity:.85;
+			position:relative;
+			top:-0.7em;
+			text-shadow:0 1px 8px rgba(0,0,0,.7);
+		}
+		.split-home__tag{
+			font-family:var(--tp-ff-syne);
+			font-size:12px;
+			letter-spacing:.08em;
+			text-transform:uppercase;
+			color:rgba(245,247,245,.75);
+			margin:0;
+			text-shadow:0 1px 6px rgba(0,0,0,.7);
+		}
+		.split-home__contact{
+			position:fixed;
+			bottom:22px;
+			left:50%;
+			transform:translateX(-50%);
+			z-index:5;
+			pointer-events:auto;
+			font-family:var(--tp-ff-syne);
+			font-size:12px;
+			letter-spacing:.16em;
+			text-transform:uppercase;
+			color:rgba(245,247,245,.55);
+			border-bottom:1px solid transparent;
+			transition:color .3s ease, border-color .3s ease;
+		}
+		.split-home__contact:hover{
+			color:#F5F7F5;
+			border-color:rgba(245,247,245,.6);
+		}
+		@media (max-width:760px){
+			.split-home{ flex-direction:column; }
+			.split-side{ flex:1 1 50%; align-items:flex-end; }
+			.split-home:hover .split-side:not(:hover){ flex:1 1 50%; }
+			.split-home:hover .split-side:hover{ flex:1 1 50%; }
+			.split-home__divider{ left:0; right:0; top:50%; bottom:auto; height:1px; width:auto; }
+			.split-home__center{ top:16px; left:16px; max-width:180px; }
+			.split-side__content{ padding-bottom:clamp(32px,10vw,56px); }
+		}
+		@media (prefers-reduced-motion: reduce){
+			.split-side, .split-side__bg, .split-side__cta, .split-side__overlay, .split-side__video-wrap{ transition:none; }
+		}
+	</style>
+</head>
+<body>
+
+	<div class="split-home">
+
+		<a class="split-side split-side--narrativa" href="narrative_home.html" aria-label="View narrative work: series and film">
+			<div class="split-side__video-wrap">
+				<iframe src="https://player.vimeo.com/video/1162279312?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Narrative background video" tabindex="-1"></iframe>
+			</div>
+			<div class="split-side__overlay"></div>
+			<div class="split-side__content">
+				<span class="split-side__eyebrow">01</span>
+				<h2 class="split-side__title">Narrative</h2>
+				<span class="split-side__cta">View Work →</span>
+			</div>
+		</a>
+
+		<a class="split-side split-side--comerciales" href="commercial_home.html" aria-label="View commercial work: advertising and brand">
+			<div class="split-side__video-wrap">
+				<iframe src="https://player.vimeo.com/video/1158549613?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture" title="Commercials background video" tabindex="-1"></iframe>
+			</div>
+			<div class="split-side__overlay"></div>
+			<div class="split-side__content">
+				<span class="split-side__eyebrow">02</span>
+				<h2 class="split-side__title">Commercials</h2>
+				<span class="split-side__cta">View Work →</span>
+			</div>
+		</a>
+
+		<div class="split-home__divider"></div>
+
+		<div class="split-home__center">
+			<div class="split-home__brand"><span class="split-home__brand-name">Rocco Rodríguez</span><span class="split-home__brand-mark">AMC</span></div>
+			<p class="split-home__tag">Two worlds, one eye</p>
+		</div>
+
+		<a class="split-home__contact" href="./roco_portfolio.html">Portfolio</a>
+
+	</div>
+
+</body>
+</html>
